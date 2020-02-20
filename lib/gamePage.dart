@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:speech_recognition/speech_recognition.dart';
 import 'dart:async';
+import 'Category.dart';
 
 
 class GamePage extends StatefulWidget {
-  GamePage({Key key, this.title}) : super(key: key);
+  GamePage({Key key, this.title,this.category}) : super(key: key);
   final String title;
+  final Category category;
 
   @override
-  _GamePageState createState() => _GamePageState();
+  _GamePageState createState() => _GamePageState(category);
 }
 
 class _GamePageState extends State<GamePage> {
   int _selectedIndex = 0;
+  final Category category;
+  _GamePageState(this.category);
   var _letterColor = Colors.black54;
   var _backgroundColor = Colors.deepPurpleAccent;
   Timer _timer;
@@ -137,7 +141,7 @@ class _GamePageState extends State<GamePage> {
               child: Container(
                 alignment: Alignment.center,
                 child: Text(
-                  'words',
+                  category.getNextWord(),
                   style: TextStyle(
                     color: _letterColor,
                     fontWeight: FontWeight.w800,

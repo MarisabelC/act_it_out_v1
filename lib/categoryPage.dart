@@ -3,7 +3,8 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'gamePage.dart';
-import 'dart:math';
+import 'Category.dart';
+
 
 class CategoryPage extends StatefulWidget {
   CategoryPage({Key key, this.title}) : super(key: key);
@@ -23,32 +24,10 @@ class _CategoryPageState extends State<CategoryPage> {
   ];
   final colorCodes = [600, 500, 400, 300];
 
-  final categories = [
-    [
-      'Trumpet',
-      'Hammer',
-      'Milk',
-      'Rocking Chair',
-      'Rocket',
-      'Airplane',
-      'Ladder',
-      'Lunchbox',
-      'Feet',
-      'Piano',
-      'Salt',
-      'Guitar',
-      'Ambulance',
-      'Shoulder',
-      'Car'
-    ],
-    ['Cat'],
-    ['Running']
-  ];
   var _backgroundColor = Colors.deepPurpleAccent;
-  Set<String> _set;
-
   int _selectedIndex = 0;
-  int _index = 0;
+
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -68,19 +47,7 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
-  int _generateRandomNumber(int max) {
-    var rng = new Random();
-    return rng.nextInt(max);
-  }
 
-  String getNextWord(){
-    int size = categories[_index].length;
-    String word = categories[_index][_generateRandomNumber(size)];
-    if (_set.contains(word) && size >_set.length)
-      return getNextWord();
-    _set.add(word);
-    return word;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,13 +95,11 @@ class _CategoryPageState extends State<CategoryPage> {
                   ],
                 ),
                 onPressed: () {
-                  _set= new HashSet<String>();
-                  _index=index;
-                  print(getNextWord());
+                  Category category = new Category(index);
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) => GamePage(
+                        builder: (context) => GamePage(category: category,
                               title: '',
                             )),
                   );
