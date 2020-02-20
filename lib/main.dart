@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:act_it_out_v1/categories.dart';
+import 'package:act_it_out_v1/categoryPage.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -114,11 +114,13 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           Container(
             decoration: BoxDecoration(
-                shape: BoxShape.circle, border: Border.all(color: Colors.red)),
+              shape: BoxShape.circle,
+              color: Colors.red,
+            ),
             child: IconButton(
               icon: Icon(
                 Icons.close,
-                color: Colors.red,
+                color: Colors.white,
               ),
               onPressed: () {
                 _exitApp();

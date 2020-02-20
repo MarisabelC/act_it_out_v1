@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'game.dart';
+import 'gamePage.dart';
+import 'dart:math';
 
 class CategoryPage extends StatefulWidget {
   CategoryPage({Key key, this.title}) : super(key: key);
@@ -11,22 +14,41 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final List<String> entries = <String>[
-    'Objects & Things',
-    'Animals',
-    'Actions',
-    'Random'
-  ];
-  final List<String> icons = <String>[
+  final entries = ['Objects & Things', 'Animals', 'Actions', 'Random'];
+  final icons = [
     'images/object.jpg',
     'images/giraffe.jpg',
     'images/action.jpg',
     'images/random.jpg'
   ];
-  final List<int> colorCodes = <int>[600, 500, 400, 300];
+  final colorCodes = [600, 500, 400, 300];
+
+  final categories = [
+    [
+      'Trumpet',
+      'Hammer',
+      'Milk',
+      'Rocking Chair',
+      'Rocket',
+      'Airplane',
+      'Ladder',
+      'Lunchbox',
+      'Feet',
+      'Piano',
+      'Salt',
+      'Guitar',
+      'Ambulance',
+      'Shoulder',
+      'Car'
+    ],
+    ['Cat'],
+    ['Running']
+  ];
   var _backgroundColor = Colors.deepPurpleAccent;
+  Set<String> _set;
 
   int _selectedIndex = 0;
+  int _index = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -44,6 +66,20 @@ class _CategoryPageState extends State<CategoryPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  int _generateRandomNumber(int max) {
+    var rng = new Random();
+    return rng.nextInt(max);
+  }
+
+  String getNextWord(){
+    int size = categories[_index].length;
+    String word = categories[_index][_generateRandomNumber(size)];
+    if (_set.contains(word) && size >_set.length)
+      return getNextWord();
+    _set.add(word);
+    return word;
   }
 
   @override
@@ -72,10 +108,11 @@ class _CategoryPageState extends State<CategoryPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      flex:2,
+                      flex: 2,
                       child: IconButton(
-                        icon:Image.asset(icons[index]),
-                        iconSize: MediaQuery.of(context).size.height / (entries.length * 3),
+                        icon: Image.asset(icons[index]),
+                        iconSize: MediaQuery.of(context).size.height /
+                            (entries.length * 3),
                       ),
                     ),
                     Expanded(
@@ -91,6 +128,9 @@ class _CategoryPageState extends State<CategoryPage> {
                   ],
                 ),
                 onPressed: () {
+                  _set= new HashSet<String>();
+                  _index=index;
+                  print(getNextWord());
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
