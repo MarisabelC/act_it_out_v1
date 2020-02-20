@@ -1,9 +1,8 @@
 import 'dart:io';
+import 'package:act_it_out_v1/categories.dart';
 import 'package:flutter/cupertino.dart';
-import 'game.dart';
+
 import 'package:flutter/material.dart';
-
-
 
 void main() => runApp(MyApp());
 
@@ -14,15 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Act It Out',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Act It Out'),
@@ -32,15 +22,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -71,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
       style: optionStyle,
     ),
     Text(
-      'Index 1: Quit',
+      'Index 1: Help',
       style: optionStyle,
     ),
   ];
@@ -83,14 +64,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _exitApp() async {
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Quit'),
-
+          backgroundColor: Colors.yellow[200],
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: BorderSide(color: Colors.white)),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -100,13 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Yes'),
+              child: Text('Yes', style: TextStyle(color: Colors.white)),
+              color: Colors.green,
               onPressed: () {
                 exit(0);
               },
             ),
             FlatButton(
-              child: Text('No'),
+              child: Text('No', style: TextStyle(color: Colors.white)),
+              color: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -119,7 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -129,12 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.deepPurpleAccent,
         actions: <Widget>[
           Container(
-
             decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.red)
-
-            ),
+                shape: BoxShape.circle, border: Border.all(color: Colors.red)),
             child: IconButton(
               icon: Icon(
                 Icons.close,
@@ -151,8 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
         position: DecorationPosition.background,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/gradient.jpg'),
-              fit: BoxFit.cover),
+              image: AssetImage('images/gradient.jpg'), fit: BoxFit.cover),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -177,12 +156,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 1,
               child: ButtonTheme(
-                minWidth: MediaQuery. of(context). size. width/2,
+                minWidth: MediaQuery.of(context).size.width / 2,
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.white)
-                  ),
+                      side: BorderSide(color: Colors.white)),
                   color: Colors.deepPurpleAccent,
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
@@ -192,7 +170,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                        CupertinoPageRoute(builder: (context) => GamePage(title: '',)),
+                      CupertinoPageRoute(
+                          builder: (context) => CategoryPage(
+                                title: 'Categories',
+                              )),
                     );
                   },
                   child: Text(
@@ -218,8 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text('Setting'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.score),
-            title: Text('Score'),
+            icon: Icon(Icons.help),
+            title: Text('Help'),
           ),
         ],
         currentIndex: _selectedIndex,
