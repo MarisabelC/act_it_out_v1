@@ -3,7 +3,6 @@ import 'package:speech_recognition/speech_recognition.dart';
 import 'dart:async';
 import 'dart:io';
 
-
 class GamePage extends StatefulWidget {
   GamePage({Key key, this.title}) : super(key: key);
 
@@ -25,7 +24,7 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   int _selectedIndex = 0;
   var _letterColor = Colors.black54;
-  var _backgroundColor= Colors.deepPurpleAccent;
+  var _backgroundColor = Colors.deepPurpleAccent;
   Timer _timer;
   int _start = 60;
   int score = 0;
@@ -38,7 +37,6 @@ class _GamePageState extends State<GamePage> {
       _selectedIndex = index;
     });
   }
-
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -63,10 +61,11 @@ class _GamePageState extends State<GamePage> {
   }
 
   @override
-  void initState(){
+  void initState() {
     startTimer();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -84,8 +83,7 @@ class _GamePageState extends State<GamePage> {
         position: DecorationPosition.background,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('images/gradient.jpg'),
-              fit: BoxFit.cover),
+              image: AssetImage('images/gradient.jpg'), fit: BoxFit.cover),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +96,8 @@ class _GamePageState extends State<GamePage> {
                     flex: 4,
                     child: Container(
                       alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(left:MediaQuery. of(context). size. width/10),
+                      margin: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width / 10),
                       child: Column(
                         children: <Widget>[
                           Text(
@@ -127,7 +126,8 @@ class _GamePageState extends State<GamePage> {
                     flex: 5,
                     child: Container(
                       alignment: Alignment.topRight,
-                      margin: EdgeInsets.only(right:MediaQuery. of(context). size. width/10),
+                      margin: EdgeInsets.only(
+                          right: MediaQuery.of(context).size.width / 10),
                       child: Column(
                         children: <Widget>[
                           Text(
@@ -172,32 +172,12 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             Expanded(
-              flex:2,
-              child: Text(
-                ''
-              ),
-
-
+              flex: 2,
+              child: Text(''),
             ),
           ],
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: _backgroundColor,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Setting'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.close),
-            title: Text('Quit'),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black,
-        onTap: _onItemTapped,
       ),
     );
   }
