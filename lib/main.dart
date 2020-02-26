@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'scorePage.dart';
 import 'team.dart';
-
+import 'settingPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -61,9 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+          builder: (context) => SettingPage(
+            title: 'Setting',
+          )),
+    );
   }
 
 
