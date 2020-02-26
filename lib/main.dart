@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:act_it_out_v1/categoryPage.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
+import 'scorePage.dart';
+import 'team.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -43,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //    });
 //  }
 
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -62,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
     });
   }
+
 
   Future<void> _exitApp() async {
     return showDialog<void>(

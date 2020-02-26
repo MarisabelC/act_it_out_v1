@@ -1,9 +1,7 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'gamePage.dart';
-import 'Category.dart';
+import 'category.dart';
 
 
 class CategoryPage extends StatefulWidget {
