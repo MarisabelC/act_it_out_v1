@@ -32,23 +32,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-//  int _counter = 0;
-//
-//  void _incrementCounter() {
-//    setState(() {
-//      // This call to setState tells the Flutter framework that something has
-//      // changed in this State, which causes it to rerun the build method below
-//      // so that the display can reflect the updated values. If we changed
-//      // _counter without calling setState(), then the build method would not be
-//      // called again, and so nothing would appear to happen.
-//      _counter++;
-//    });
-//  }
 
+  SettingPage _settingPage= SettingPage(title: 'Setting',);
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 0: Setting',
@@ -61,15 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   void _onItemTapped(int index) {
-    Navigator.push(
-      context,
-      CupertinoPageRoute(
-          builder: (context) => SettingPage(
-            title: 'Setting',
-          )),
-    );
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => _settingPage));
+        break;
+        case 1:
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => ScorePage(
+                  title: 'Score',
+                )),
+          );
+          break;
+    }
   }
-
 
   Future<void> _exitApp() async {
     return showDialog<void>(
@@ -182,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       context,
                       CupertinoPageRoute(
                           builder: (context) => CategoryPage(
-                                title: 'Categories',
+                                title: 'Categories',teams:_settingPage.teams,language:_settingPage.language,startTime:_settingPage.timer
                               )),
                     );
                   },
@@ -221,42 +220,3 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-//
-//_speech = SpeechRecognition();
-//
-//// The flutter app not only call methods on the host platform,
-//// it also needs to receive method calls from host.
-//_speech.setAvailabilityHandler((bool result)
-//=> setState(() => _speechRecognitionAvailable = result));
-//
-//// handle device current locale detection
-//_speech.setCurrentLocaleHandler((String locale) =>
-//setState(() => _currentLocale = locale));
-//
-//_speech.setRecognitionStartedHandler(()
-//=> setState(() => _isListening = true));
-//
-//// this handler will be called during recognition.
-//// the iOS API sends intermediate results,
-//// On my Android device, only the final transcription is received
-//_speech.setRecognitionResultHandler((String text)
-//=> setState(() => transcription = text));
-//
-//_speech.setRecognitionCompleteHandler(()
-//=> setState(() => _isListening = false));
-//
-//// 1st launch : speech recognition permission / initialization
-//_speech
-//    .activate()
-//.then((res) => setState(() => _speechRecognitionAvailable = res));
-////..
-//
-//speech.listen(locale:_currentLocale).then((result)=> print('result : $result'));
-//
-//// ...
-//
-//speech.cancel();
-//
-//// ||
-//
-//speech.stop();

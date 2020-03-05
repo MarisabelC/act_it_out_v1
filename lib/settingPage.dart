@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 class SettingPage extends StatefulWidget {
   SettingPage({Key key, this.title}) : super(key: key);
   final String title;
+  var language='en_US';
+  var teams = 2;
+  int timer = 60;
+
 
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -14,8 +18,9 @@ class _SettingPageState extends State<SettingPage> {
   final _icons = [Icons.language, Icons.people, Icons.timer];
   final _colorCodes = [600, 500, 400, 300];
   int _currentTeamValue = 2;
-  var selectedRadioTile = 2;
-  var _language = 0;
+  Map<int,String> _languages = {0:'en_US',1:'es_ES'};
+  var _languageIndex = 0;
+
 
   final _teamOptions = [
     TeamValue(2, "2"),
@@ -29,14 +34,12 @@ class _SettingPageState extends State<SettingPage> {
   ];
   var _backgroundColor = Colors.deepPurpleAccent;
 
-  int _timer = 60;
-
-  void _incrementTimer() {
+   void _incrementTimer() {
     setState(() {
-      if (_timer < 120)
-        _timer += 30;
+      if (widget.timer < 120)
+        widget.timer += 30;
       else
-        _timer = 60;
+        widget.timer = 60;
     });
   }
 
@@ -58,14 +61,14 @@ class _SettingPageState extends State<SettingPage> {
 
     setSelectedRadioTile(int val) {
       setState(() {
-        selectedRadioTile = val;
+        widget.teams = val;
       });
     }
 
     RadioListTile radioButton(List list, int index) {
       return RadioListTile(
         value: list[index]._key,
-        groupValue: selectedRadioTile,
+        groupValue: widget.teams,
         title: Text(list[index]._value),
         onChanged: (val) {
           print("Radio Tile pressed $val");
@@ -78,14 +81,15 @@ class _SettingPageState extends State<SettingPage> {
 
     setSelectedLanguage(int val) {
       setState(() {
-        _language = val;
+        _languageIndex = val;
+        widget.language =_languages[_languageIndex];
       });
     }
 
     RadioListTile radioButtonLanguage(List list, int index) {
       return RadioListTile(
         value: list[index]._key,
-        groupValue: _language,
+        groupValue: _languageIndex,
         title: Text(list[index]._value),
         onChanged: (val) {
           print("Radio Tile pressed $val");
@@ -94,6 +98,10 @@ class _SettingPageState extends State<SettingPage> {
         activeColor: Colors.black,
         selected: true,
       );
+    }
+
+    String getTime(){
+      return (widget.timer).toString();
     }
 
     return Scaffold(
@@ -214,7 +222,7 @@ class _SettingPageState extends State<SettingPage> {
                     padding: EdgeInsets.only(left: _width*.2),
                     child: ListTile(
                       title: Text(
-                        '$_timer' + "''",
+                        getTime() + "''",
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontFamily: 'Roboto',

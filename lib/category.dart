@@ -10,7 +10,7 @@ class Category{
     [
       'trumpet',
       'hammer',
-      'mmilk',
+      'milk',
       'rocking chair',
       'rocket',
       'airplane',

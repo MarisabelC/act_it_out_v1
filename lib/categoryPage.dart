@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'gamePage.dart';
 import 'category.dart';
+import 'scorePage.dart';
 
 
 class CategoryPage extends StatefulWidget {
-  CategoryPage({Key key, this.title}) : super(key: key);
+  CategoryPage({Key key, this.title,this.language,this.teams,this.startTime}) : super(key: key);
   final String title;
-
+  final teams;
+  final language;
+  final startTime;
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
@@ -24,25 +27,32 @@ class _CategoryPageState extends State<CategoryPage> {
 
   var _backgroundColor = Colors.deepPurpleAccent;
   int _selectedIndex = 0;
+  ScorePage _scorePage = ScorePage( title: 'Score',);
 
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Setting',
-      style: optionStyle,
-    ),
-  ];
+
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    switch (index) {
+      case 0:
+//        Navigator.push(
+//          context,
+//          CupertinoPageRoute(
+//              builder: (context) => SettingPage(
+//                title: 'Setting',
+//              )),
+//        );
+        break;
+      case 1:
+//        _scorePage.setVisiblility(false);
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => _scorePage));
+        break;
+    }
   }
 
 
@@ -98,7 +108,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     context,
                     CupertinoPageRoute(
                         builder: (context) => GamePage(category: category,
-                              title: '',
+                              title: '',teams:widget.teams,language:widget.language,startTime:widget.startTime,scorePage:_scorePage
                             )),
                   );
                 },
