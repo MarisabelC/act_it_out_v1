@@ -7,6 +7,7 @@ class SettingPage extends StatefulWidget {
   var language='en_US';
   var teams = 2;
   int timer = 60;
+  var _languageIndex = 0;
 
 
   @override
@@ -16,10 +17,8 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   final _entries = ['Languages', 'Teams', 'Game Time'];
   final _icons = [Icons.language, Icons.people, Icons.timer];
-  final _colorCodes = [600, 500, 400, 300];
-  int _currentTeamValue = 2;
   Map<int,String> _languages = {0:'en_US',1:'es_ES'};
-  var _languageIndex = 0;
+
 
 
   final _teamOptions = [
@@ -81,15 +80,15 @@ class _SettingPageState extends State<SettingPage> {
 
     setSelectedLanguage(int val) {
       setState(() {
-        _languageIndex = val;
-        widget.language =_languages[_languageIndex];
+        widget._languageIndex = val;
+        widget.language =_languages[widget._languageIndex];
       });
     }
 
     RadioListTile radioButtonLanguage(List list, int index) {
       return RadioListTile(
         value: list[index]._key,
-        groupValue: _languageIndex,
+        groupValue: widget._languageIndex,
         title: Text(list[index]._value),
         onChanged: (val) {
           print("Radio Tile pressed $val");
