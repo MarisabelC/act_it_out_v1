@@ -1,9 +1,8 @@
 import 'dart:math';
 
-class Category{
-
+class Category {
   int _index;
-  Set<String> _set ={};
+  Set<String> _set = {};
   Category(this._index);
 
   final categories = [
@@ -15,6 +14,8 @@ class Category{
       'rocket',
       'airplane',
       'ladder',
+      'alarm clock',
+      'disco',
       'lunchbox',
       'feet',
       'piano',
@@ -36,7 +37,7 @@ class Category{
       'flute',
       'pajamas',
       'rain',
-      'eartquake',
+      'earthquake',
       'nose',
       'ice cream cone',
       'glasses',
@@ -67,8 +68,198 @@ class Category{
       'toothbrush',
       'fork',
     ],
-    ['cat'],
-    ['running']
+    [
+      'the little mermaid',
+      'puss in boots',
+      'the very hungry caterpillar',
+      'planes',
+      'monsters inc',
+      'cars',
+      'hercules',
+      'edward scissorhands',
+      'mickey mouse',
+      'jack and the beanstalk',
+      'the lion king',
+      'superman',
+      'alice in wonderland',
+      'cinderella',
+      'the karate kid',
+      "charlotte's web",
+      'dumbo',
+      'home alone',
+      'pinocchio',
+      'spider man',
+      'super man',
+      'harry potter',
+      'rapunzel',
+      'moby dick',
+      'frozen',
+    ],
+    [
+      'vampire',
+      'the easter bunny',
+      'zombie',
+      'swimmer',
+      'captain hook',
+      'transformer',
+      'dancer',
+      'darth vader',
+      'the grinch',
+      'batman',
+      'magician',
+      'the three bears',
+      'pirates',
+      'giant',
+      'homer simpson',
+      'michael jackson',
+      'harry potter',
+      'woody',
+      'snow white',
+      'pinocchio',
+      'dumbo',
+      'rapunzel',
+      'hulk',
+      'luke',
+      'captain america',
+      'wonder woman',
+      'spider man'
+    ],
+    [
+      'cat',
+      'alligator',
+      'chicken',
+      'cow',
+      'dog',
+      'mosquito',
+      'turtle',
+      'rabbit',
+      'bird',
+      'kangaroo',
+      'shark',
+      'chimpanzee',
+      'snake',
+      'duck',
+      'cat',
+      'frog',
+      'spider',
+      'penguin',
+      'pig',
+      'elephant',
+      'fish',
+      'beaver',
+      'fox',
+      'cheetah',
+      'camel',
+      'dolphin',
+      'elephant',
+      'horse',
+      'whale'
+    ],
+    [
+      'running',
+      'tapdancing',
+      'clapping',
+      'whispering',
+      'hide and seek',
+      'giggling',
+      'making sandwich',
+      'hitting baseball',
+      'jumping',
+      'thinking',
+      'sneezing',
+      'bouncing',
+      'pinching',
+      'waving',
+      'taking a selfie',
+      'drinking',
+      'making a cup of tea',
+      'scrolling on a phone',
+      'playing video game',
+      'cheering',
+      'reaching',
+      'going on a rollercoaster',
+      'juggling',
+      'crying',
+      'high jump',
+      'drawing',
+      'washing hair',
+      'kissing',
+      'hugging',
+      'skipping',
+      'going to bed',
+      'praying',
+      'horse riding',
+      'brushing hair',
+      'baking a cake',
+      'winking',
+      'stomping',
+      'kicking',
+      'haircut',
+      'putting on makeup',
+      'flossing teeth',
+      'sprinting',
+      'pitching a baseball',
+      'farting',
+      'going to the bathroom',
+      'walking up stairs',
+      'reading',
+      'jump rope',
+      'hiccup',
+      'reading the newspaper',
+      'washing the dog',
+      'reading a magazine',
+      'eating spaguetti',
+      'flying',
+      'miming',
+      'hula hooping',
+      'cleaning teeth',
+      'vacumming',
+      'singing karaoke',
+      'rowing',
+      'blinking',
+      'mowing the lawn',
+      'watering the garden',
+      'coughing',
+      'stopping',
+      'having a nightmare'
+    ],
+    [
+      'wrestling',
+      'horse racing',
+      'car racing',
+      'high jumping',
+      'kayaking',
+      'surfing',
+      'yoga',
+      'badminton',
+      'aerobics',
+      'ping pong',
+      'fishing',
+      'soccer',
+      'baseball',
+      'football',
+      'ice hockey',
+      'cricket',
+      'tennis',
+      'ice skating',
+      'karate',
+      'triathlon',
+      'golf',
+      'baskeball',
+      'swimming',
+      'hockey',
+      'archery',
+      'skateboarding',
+      'bowling',
+      'boxing',
+      'curling',
+      'fencing',
+      'fitness',
+      'gymnastics',
+      'volleyball',
+      'weightlifting',
+      'spinning',
+    ]
   ];
 
   int _generateRandomNumber(int max) {
@@ -76,21 +267,23 @@ class Category{
     return rng.nextInt(max);
   }
 
-  void resetCategory(){
-    _set={};
+  void resetCategory() {
+    _set = {};
   }
 
-  String getNextWord(){
-    int size =  categories[_index].length;
-    String word = categories[_index][_generateRandomNumber(size)];
+  String getNextWord() {
+    var index= _index;
+    if (_index == categories.length)
+      index = _generateRandomNumber(categories.length);
+
+    int size = categories[index].length;
+    String word = categories[index][_generateRandomNumber(size)];
     if (!_set.contains(word)) {
       _set.add(word);
       return word;
     }
-    if ( size > _set.length)
-      return getNextWord();
+    if (size > _set.length) return getNextWord();
 
     return null;
-
   }
 }

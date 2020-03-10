@@ -3,59 +3,69 @@ import 'package:flutter/cupertino.dart';
 import 'gamePage.dart';
 import 'category.dart';
 import 'scorePage.dart';
-
+import 'helpPage.dart';
 
 class CategoryPage extends StatefulWidget {
-  CategoryPage({Key key, this.title,this.language,this.teams,this.startTime}) : super(key: key);
+  CategoryPage({Key key, this.title, this.language, this.teams, this.startTime})
+      : super(key: key);
   final String title;
-  final teams;
-  final language;
-  final startTime;
+  var teams;
+  var language;
+  var startTime;
+  final ScorePage _scorePage = ScorePage(
+    title: 'Score',
+    teams: [],
+  );
+
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final entries = ['Objects & Things', 'Animals', 'Actions', 'Random'];
+  final entries = [
+    'Objects & Things',
+    'Movies & Books',
+    'People/Characters',
+    'Animals',
+    'Actions',
+    'Sports',
+    'Random'
+  ];
   final icons = [
     'images/object.jpg',
+    'images/movie_book.png',
+    'images/people.jpg',
     'images/giraffe.jpg',
     'images/action.jpg',
+    'images/sport.jpg',
     'images/random.jpg'
   ];
-  final colorCodes = [600, 500, 400, 300];
+  final colorCodes = [800, 700, 600, 500, 400, 300, 200];
 
   var _backgroundColor = Colors.deepPurpleAccent;
   int _selectedIndex = 0;
-  ScorePage _scorePage = ScorePage( title: 'Score',);
-
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-
   void _onItemTapped(int index) {
     switch (index) {
       case 0:
-//        Navigator.push(
-//          context,
-//          CupertinoPageRoute(
-//              builder: (context) => SettingPage(
-//                title: 'Setting',
-//              )),
-//        );
-        break;
-      case 1:
-//        _scorePage.setVisiblility(false);
         Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => _scorePage));
+              builder: (context) => HelpPage(
+                    title: 'How to play',
+                  )),
+        );
+        break;
+      case 1:
+        widget._scorePage.teams = [];
+        Navigator.push(context,
+            CupertinoPageRoute(builder: (context) => widget._scorePage));
         break;
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +87,7 @@ class _CategoryPageState extends State<CategoryPage> {
           itemCount: entries.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              height: MediaQuery.of(context).size.height / (entries.length * 2),
+              height: MediaQuery.of(context).size.height / (entries.length),
               color: Colors.blue[colorCodes[index]],
               child: FlatButton(
                 child: Row(
@@ -87,7 +97,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       child: IconButton(
                         icon: Image.asset(icons[index]),
                         iconSize: MediaQuery.of(context).size.height /
-                            (entries.length * 3),
+                            (entries.length * 2),
                       ),
                     ),
                     Expanded(
@@ -105,12 +115,15 @@ class _CategoryPageState extends State<CategoryPage> {
                 onPressed: () {
                   Category category = new Category(index);
                   Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => GamePage(category: category,
-                              title: '',teams:widget.teams,language:widget.language,startTime:widget.startTime,scorePage:_scorePage
-                            )),
-                  );
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => GamePage(
+                              category: category,
+                              title: '',
+                              teams: widget.teams,
+                              language: widget.language,
+                              startTime: widget.startTime,
+                              scorePage: widget._scorePage)));
                 },
               ),
             );
@@ -124,7 +137,7 @@ class _CategoryPageState extends State<CategoryPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.help),
-            title: Text('Help'),
+            title: Text('How to play'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.score),
