@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           CupertinoPageRoute(
               builder: (context) => HelpPage(
-                    title: 'How to play',
+                    title: 'How to play',language: _settingPage.language,
                   )),
         );
         break;
