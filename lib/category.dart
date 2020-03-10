@@ -89,7 +89,6 @@ class Category {
       'home alone',
       'pinocchio',
       'spider man',
-      'super man',
       'harry potter',
       'rapunzel',
       'moby dick',

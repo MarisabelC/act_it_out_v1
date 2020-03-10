@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:act_it_out_v1/categoryPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'scorePage.dart';
-import 'team.dart';
+import 'helpPage.dart';
 import 'settingPage.dart';
+
+
 
 void main() => runApp(MyApp());
 
@@ -32,12 +33,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  SettingPage _settingPage;
+  CategoryPage _categoryPage;
 
-  SettingPage _settingPage= SettingPage(title: 'Setting',);
+  @override
+  void initState() {
+    super.initState();
+    _settingPage = SettingPage(
+      title: 'Setting',
+    );
+    _categoryPage = CategoryPage(
+        title: 'Categories',
+        teams: _settingPage.teams,
+        language: _settingPage.language,
+        startTime: _settingPage.timer);
+
+  }
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
@@ -54,19 +69,17 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (index) {
       case 0:
         Navigator.push(
+            context, CupertinoPageRoute(builder: (context) => _settingPage));
+        break;
+      case 1:
+        Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => _settingPage));
+              builder: (context) => HelpPage(
+                    title: 'How to play',
+                  )),
+        );
         break;
-        case 1:
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => ScorePage(
-                  title: 'Score',
-                )),
-          );
-          break;
     }
   }
 
@@ -177,12 +190,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(8.0),
                   splashColor: Colors.blueAccent,
                   onPressed: () {
+                    _categoryPage.teams = _settingPage.teams;
+                    _categoryPage.startTime = _settingPage.timer;
+                    _categoryPage.language = _settingPage.language;
                     Navigator.push(
                       context,
-                      CupertinoPageRoute(
-                          builder: (context) => CategoryPage(
-                                title: 'Categories',teams:_settingPage.teams,language:_settingPage.language,startTime:_settingPage.timer
-                              )),
+                      CupertinoPageRoute(builder: (context) => _categoryPage),
                     );
                   },
                   child: Text(
@@ -209,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.help),
-            title: Text('Help'),
+            title: Text('How to play'),
           ),
         ],
         currentIndex: _selectedIndex,
@@ -219,4 +232,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
