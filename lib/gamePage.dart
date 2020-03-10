@@ -4,10 +4,10 @@ import 'category.dart';
 import 'team.dart';
 import 'package:flutter/cupertino.dart';
 import 'scorePage.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:screen/screen.dart';
 
 class GamePage extends StatefulWidget {
   GamePage(
@@ -45,9 +45,12 @@ class _GamePageState extends State<GamePage> {
   final SpeechToText speech = SpeechToText();
   String lastError = "";
   String lastStatus = "";
+  bool _hasPass= false;
+  String _skipWord="";
+
 
   void _startTimer() {
-    addTeam();
+    _score = _teams[_idTeam].getScore();
 //    _start=2;
     _start = widget.startTime;
     const oneSec = const Duration(seconds: 1);
@@ -58,13 +61,15 @@ class _GamePageState extends State<GamePage> {
           if (_start < 1) {
             timer.cancel();
             stopListening();
+            _visible = false;
             _idTeam++;
             if (_idTeam < widget.teams) {
-              _visible = false;
               widget.category.resetCategory();
               _getWord();
             } else {
               cancelListening();
+              Screen.keepOn(false);
+              widget.scorePage.isRead=false;
               widget.scorePage.teams=_teams;
               Navigator.pop(context);
               Navigator.push(
@@ -74,22 +79,34 @@ class _GamePageState extends State<GamePage> {
             }
           } else {
             _start = _start - 1;
+            _hasPass = false;
           }
         },
       ),
     );
   }
 
-  void addTeam() {
-    _teams.add(Team(_idTeam));
-    _score = _teams[_idTeam].getScore();
+  void _addTeams() {
+    for (int i=1; i<=widget.teams; i++){
+      _teams.add(Team(i));
+    }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null)
+      _timer.cancel();
     super.dispose();
     cancelListening();
+  }
+
+  void _incrementScoreOppositeTeam(){
+    setState(() {
+      for(Team team in _teams){
+        if (team.id != _idTeam +1)
+          team.incrementScore();
+      }
+    });
   }
 
   void _incrementScore() {
@@ -112,6 +129,9 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     _getWord();
     initSpeechState();
+    _addTeams();
+    Screen.keepOn(true);
+    _skipWord= widget.category.getPass();
   }
 
 
@@ -125,7 +145,14 @@ class _GamePageState extends State<GamePage> {
   }
 
   void startListening() {
-    speech.listen(onResult: resultListener );
+    speech.listen(
+        onResult: resultListener,
+        listenFor: Duration(seconds: 5),
+        localeId: widget.language);
+////        onSoundLevelChange: soundLevelListener,
+//        cancelOnError: true,
+//        partialResults: true );
+    setState(() {});
   }
 
   void stopListening() {
@@ -137,7 +164,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   void resultListener(SpeechRecognitionResult result) {
-    String text="${result.recognizedWords} - ${result.finalResult}";
+    String text="${result.recognizedWords} - ${result.finalResult}".toLowerCase();
     List<String> wordList = _word.split(" ");
     List<String> textList = text.split(" ");
 
@@ -164,7 +191,11 @@ class _GamePageState extends State<GamePage> {
         }
       }
     });
-    if (textList.contains('pass')) {
+    if (textList.contains(_skipWord) && !_hasPass ) {
+      setState(() {
+        _hasPass = true;
+      });
+      _incrementScoreOppositeTeam();
       _getWord();
     }
     stopListening();
@@ -176,6 +207,8 @@ class _GamePageState extends State<GamePage> {
       lastError = "${error.errorMsg} - ${error.permanent}";
     });
 
+    cancelListening();
+    initSpeechState();
     startListening();
   }
   void statusListener(String status ) {
@@ -198,7 +231,7 @@ class _GamePageState extends State<GamePage> {
               image: AssetImage('images/gradient.jpg'), fit: BoxFit.cover),
         ),
         child: Container(
-          color: widget.scorePage.colors[_idTeam],
+          color: !_visible? Colors.transparent :widget.scorePage.colors[_idTeam],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -281,6 +314,7 @@ class _GamePageState extends State<GamePage> {
                     alignment: Alignment.center,
                     child: Text(
                       '$_word',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: _letterColor,
                         fontWeight: FontWeight.w800,
@@ -303,7 +337,7 @@ class _GamePageState extends State<GamePage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18.0),
                             side: BorderSide(color: Colors.white)),
-                        color: Colors.deepPurpleAccent,
+                        color: Colors.black54,
                         textColor: Colors.white,
                         disabledColor: Colors.grey,
                         disabledTextColor: Colors.black,
@@ -313,9 +347,6 @@ class _GamePageState extends State<GamePage> {
                           _visible = !_visible;
                           startListening();
                           _startTimer();
-                          setState(() {
-                            Wakelock.enable();
-                          });
                         },
                         child: Text(
                           'Start',

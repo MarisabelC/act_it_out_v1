@@ -22,15 +22,26 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final entries = [
-    'Objects & Things',
-    'Movies & Books',
-    'People/Characters',
-    'Animals',
-    'Actions',
-    'Sports',
-    'Random'
-  ];
+  final entries = {
+    'en_US': [
+      'Objects & Things',
+      'Movies & Books',
+      'People/Characters',
+      'Animals',
+      'Actions',
+      'Sports',
+      'Random'
+    ],
+    'es_ES': [
+      'Objetos & Cosas',
+      'Peliculas & Libros',
+      'Personajes',
+      'Animales',
+      'Accion',
+      'Deportes',
+      'Aleatorio'
+    ]
+  };
   final icons = [
     'images/object.jpg',
     'images/movie_book.png',
@@ -55,7 +66,7 @@ class _CategoryPageState extends State<CategoryPage> {
           context,
           CupertinoPageRoute(
               builder: (context) => HelpPage(
-                    title: 'How to play',
+                    title: 'How to play',language: widget.language,
                   )),
         );
         break;
@@ -84,10 +95,10 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         child: ListView.separated(
           padding: const EdgeInsets.all(8),
-          itemCount: entries.length,
+          itemCount: entries[widget.language].length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              height: MediaQuery.of(context).size.height / (entries.length),
+              height: MediaQuery.of(context).size.height / (entries[widget.language].length),
               color: Colors.blue[colorCodes[index]],
               child: FlatButton(
                 child: Row(
@@ -97,7 +108,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       child: IconButton(
                         icon: Image.asset(icons[index]),
                         iconSize: MediaQuery.of(context).size.height /
-                            (entries.length * 2),
+                            (entries[widget.language].length * 2),
                       ),
                     ),
                     Expanded(
@@ -105,7 +116,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          '${entries[index]}',
+                          '${entries[widget.language][index]}',
                           style: TextStyle(fontSize: 25.0),
                         ),
                       ),
@@ -113,7 +124,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   ],
                 ),
                 onPressed: () {
-                  Category category = new Category(index);
+                  Category category = new Category(index,widget.language);
                   Navigator.push(
                       context,
                       CupertinoPageRoute(
