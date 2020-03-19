@@ -46,8 +46,8 @@ class _CategoryPageState extends State<CategoryPage> {
     'images/object.jpg',
     'images/movie_book.png',
     'images/people.jpg',
-    'images/giraffe.jpg',
-    'images/action.jpg',
+    'images/animals.jpg',
+    'images/action.png',
     'images/sport.jpg',
     'images/random.jpg'
   ];
@@ -98,7 +98,7 @@ class _CategoryPageState extends State<CategoryPage> {
           itemCount: entries[widget.language].length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              height: MediaQuery.of(context).size.height / (entries[widget.language].length),
+              height: MediaQuery.of(context).size.height / (entries[widget.language].length*1.5),
               color: Colors.blue[colorCodes[index]],
               child: FlatButton(
                 child: Row(
@@ -147,12 +147,12 @@ class _CategoryPageState extends State<CategoryPage> {
         backgroundColor: _backgroundColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            title: Text('How to play'),
+            icon: Icon(Icons.help,color: Colors.white,),
+            title: Text('How to play',style: TextStyle(color: Colors.white,)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.score),
-            title: Text('Score'),
+            icon: Icon(Icons.score,color: Colors.white,),
+            title: Text('Score',style: TextStyle(color: Colors.white,)),
           ),
         ],
         currentIndex: _selectedIndex,
