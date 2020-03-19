@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:act_it_out_v1/categoryPage.dart';
+import 'categoryPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'helpPage.dart';
 import 'settingPage.dart';
-
-
+import 'dart:async';
 
 void main() => runApp(MyApp());
 
@@ -35,6 +34,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   SettingPage _settingPage;
   CategoryPage _categoryPage;
+  double _progressValue = 0.0;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -42,12 +43,27 @@ class _MyHomePageState extends State<MyHomePage> {
     _settingPage = SettingPage(
       title: 'Setting',
     );
+    _updateProgress();
     _categoryPage = CategoryPage(
         title: 'Categories',
         teams: _settingPage.teams,
         language: _settingPage.language,
         startTime: _settingPage.timer);
+  }
 
+  void _updateProgress() {
+    const oneSec = const Duration(seconds: 1);
+    new Timer.periodic(oneSec, (Timer t) {
+      setState(() {
+        _progressValue += 0.2;
+        // we "finish" downloading here
+        if (_progressValue.toStringAsFixed(1) == '1.0') {
+          t.cancel();
+          _loading = false;
+          return;
+        }
+      });
+    });
   }
 
   int _selectedIndex = 0;
@@ -76,7 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           CupertinoPageRoute(
               builder: (context) => HelpPage(
-                    title: 'How to play',language: _settingPage.language,
+                    title: 'How to play',
+                    language: _settingPage.language,
                   )),
         );
         break;
@@ -90,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Quit'),
-          backgroundColor: Colors.yellow[200],
+          backgroundColor: Colors.blueGrey[400],
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
               side: BorderSide(color: Colors.white)),
@@ -133,14 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.deepPurpleAccent,
         actions: <Widget>[
           Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.red,
-            ),
             child: IconButton(
               icon: Icon(
                 Icons.close,
                 color: Colors.white,
+                size: 40,
               ),
               onPressed: () {
                 _exitApp();
@@ -177,38 +191,56 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               flex: 1,
-              child: ButtonTheme(
-                minWidth: MediaQuery.of(context).size.width / 2,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.white)),
-                  color: Colors.deepPurpleAccent,
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
-                  onPressed: () {
-                    _categoryPage.teams = _settingPage.teams;
-                    _categoryPage.startTime = _settingPage.timer;
-                    _categoryPage.language = _settingPage.language;
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder: (context) => _categoryPage),
-                    );
-                  },
-                  child: Text(
-                    "Play",
-                    style: TextStyle(fontSize: 25.0),
+              child: Visibility(
+                visible: !_loading,
+                child: ButtonTheme(
+                  minWidth: MediaQuery.of(context).size.width / 2,
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.white)),
+                    color: Colors.deepPurpleAccent,
+                    textColor: Colors.white,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.black,
+                    padding: EdgeInsets.all(8.0),
+                    splashColor: Colors.blueAccent,
+                    onPressed: () {
+                      _categoryPage.teams = _settingPage.teams;
+                      _categoryPage.startTime = _settingPage.timer;
+                      _categoryPage.language = _settingPage.language;
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (context) => _categoryPage),
+                      );
+                    },
+                    child: Text(
+                      "Play",
+                      style: TextStyle(fontSize: 25.0),
+                    ),
                   ),
                 ),
               ),
             ),
             Expanded(
-              flex: 4,
-              child: Text(''),
-            )
+                flex: 4,
+                child: Visibility(
+                  visible: _loading,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('loading...'),
+                      Container(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * .1,
+                              right: MediaQuery.of(context).size.width * .1),
+                          child: LinearProgressIndicator(
+                            value: _progressValue,
+                          )),
+                      Text('${(_progressValue * 100).round()}%'),
+                    ],
+                  ),
+                ))
           ],
           crossAxisAlignment: CrossAxisAlignment.center,
         ),
@@ -217,12 +249,12 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.deepPurpleAccent,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Setting'),
+            icon: Icon(Icons.settings,color: Colors.white,),
+            title: Text('Setting',style: TextStyle(color: Colors.white,)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            title: Text('How to play'),
+            icon: Icon(Icons.help,color: Colors.white,),
+            title: Text('How to play',style: TextStyle(color: Colors.white,)),
           ),
         ],
         currentIndex: _selectedIndex,
