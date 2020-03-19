@@ -1,46 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'team.dart';
+import 'readWriteFile.dart';
 
 class ScorePage extends StatefulWidget {
   ScorePage({Key key, this.title, this.teams}) : super(key: key);
+  bool isRead = false;
   final String title;
   List<Team> teams = [];
-  final colors = [Colors.blue[300], Colors.red[400], Colors.lightGreen[400], Colors.amber[300]];
-
+  final colors = [
+    Colors.blue[300],
+    Colors.pink[200],
+    Colors.lightGreen[400],
+    Colors.amber[200],
+    Colors.grey
+  ];
+  List<int> _scores = [];
+  ReadWriteFile _file = ReadWriteFile();
   @override
   _ScorePageState createState() => _ScorePageState();
 }
 
 class _ScorePageState extends State<ScorePage> {
-  final scores = [0, 0, 0, 0, 0];
+  List<String> _newScores = ['', '', '', ''];
   var _backgroundColor = Colors.deepPurpleAccent;
-  final _places = ['1st', '2nd', '3rd', '4th', '5th'];
+  final _places = ['1st', '2nd', '3rd', '4th'];
 
   @override
-  Widget build(BuildContext context) {
-//    final _height =
-//        MediaQuery.of(context).size.height / (_entries.length * 1.5);
-    final _width = MediaQuery.of(context).size.width;
+  void initState() {
+    super.initState();
+    widget._file.readScores().then((List<int> value) {
+      _updateScore(value);
+    });
+  }
 
-    void replaceHighScore() {
-      setState(() {
+  void _updateScore(value) {
+    setState(() {
+      widget._scores = value;
+      print('no empty' + widget._scores.toString());
+    });
+  }
+
+  void replaceHighScore() {
+    print('replace' + widget._scores.toString());
+    setState(() {
+      if (widget.teams != null)
         for (var team in widget.teams) {
-          for (int i = 0; i < scores.length; i++) {
-            if (team.getScore() > scores[i]) {
-              scores.insert(i, team.getScore());
-              scores.removeLast();
+          for (int i = 0; i < widget._scores.length; i++) {
+            if (team.getScore() > widget._scores[i]) {
+              widget._scores.insert(i, team.getScore());
+              _newScores.insert(i, 'NEW');
+              print('new');
+              widget._scores.removeLast();
+              break;
             }
           }
         }
-      });
-    }
+    });
+    String data = widget._scores.map((i) => i.toString()).join(",");
+    widget._file.writeScores(data);
+  }
 
-    @override
-    void initState() {
-      super.initState();
-      replaceHighScore();
-    }
+  @override
+  Widget build(BuildContext context) {
+    final _width = MediaQuery.of(context).size.width;
 
     BoxDecoration boxDecoration() {
       return BoxDecoration(
@@ -57,15 +80,17 @@ class _ScorePageState extends State<ScorePage> {
       return 0;
     }
 
-    Text getHighScoreText(){
-      replaceHighScore();
-      return Text(
-          ' High Scores',
+    Text getHighScoreText() {
+      if (widget.isRead == false) {
+        replaceHighScore();
+        setState(() => widget.isRead = true);
+      }
+      return Text(' High Scores',
           textAlign: TextAlign.center,
           style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-      ));
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ));
     }
 
     return Scaffold(
@@ -91,7 +116,7 @@ class _ScorePageState extends State<ScorePage> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
-                      child:getHighScoreText(),
+                      child: getHighScoreText(),
                     ),
                   ),
                   Expanded(
@@ -101,18 +126,18 @@ class _ScorePageState extends State<ScorePage> {
                         left: _width * .05,
                         right: _width * .05,
                       ),
-                      itemCount: scores.length,
+                      itemCount: widget._scores.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                           height: (MediaQuery.of(context).size.height / 2) /
-                              scores.length,
+                              (widget._scores.length + 1),
                           color: Colors.transparent,
                           child: Row(
                             children: <Widget>[
                               Expanded(
                                 flex: 5,
                                 child: Text(
-                                  _places[index],
+                                  '\t' + _places[index],
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -120,55 +145,70 @@ class _ScorePageState extends State<ScorePage> {
                                 ),
                               ),
                               Expanded(
-                                flex: 5,
+                                flex: 3,
                                 child: Text(
-                                  ' ${scores[index]}',
-                                  textAlign: TextAlign.center,
+                                  ' ${widget._scores[index]}  ',
+                                  textAlign: TextAlign.right,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
+                              Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    ' ${_newScores[index]}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
+                                  ))
                             ],
                           ),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(),
+                          const Divider(),
                     ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              flex: 2,
-              child: ListView.builder(
-                padding: EdgeInsets.only(
-                  right: _width * .05,
-                  bottom: MediaQuery.of(context).size.height * .1,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: getNumberOfTeam(),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    width:
-                    MediaQuery.of(context).size.width / 2,
-                    color: widget.colors[index],
-                    child: Center(
-                        child: Column(
+              flex: 3,
+              child: LayoutBuilder(
+                builder: (context, constraint) {
+                  return new GridView.builder(
+                    itemCount: getNumberOfTeam(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio:
+                          constraint.maxWidth / constraint.maxHeight,
+                    ),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        color: widget.colors[index],
+                        margin: EdgeInsets.all(4.0),
+                        child: Center(
+                            child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              'Team  ${widget.teams[index].id + 1} ',
+                              'Team  ${widget.teams[index].id} ',
                               style: TextStyle(fontSize: 15),
                             ),
                             Text(
                               ' ${widget.teams[index].getScore()}',
-                              style: TextStyle(fontSize: 35),
+                              style: TextStyle(
+                                fontSize: 35,
+                              ),
                             ),
                           ],
                         )),
+                      );
+                    },
                   );
                 },
               ),
