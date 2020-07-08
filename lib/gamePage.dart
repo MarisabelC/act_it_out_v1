@@ -59,8 +59,8 @@ class _GamePageState extends State<GamePage> {
 
   void _startTimer() {
     _score = _teams[_idTeam].getScore();
-    _start=300;
-//    _start = widget.startTime;
+//    _start=300;
+    _start = widget.startTime;
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,

@@ -46,8 +46,8 @@ class _CategoryPageState extends State<CategoryPage> {
     'images/object.jpg',
     'images/movie_book.png',
     'images/people.jpg',
-    'images/animals.jpg',
-    'images/action.png',
+    'images/giraffe.jpg',
+    'images/action.jpg',
     'images/sport.jpg',
     'images/random.jpg'
   ];
